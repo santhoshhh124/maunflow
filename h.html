@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Webpage</title>
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        #slideshow {
+            width: 100%;
+            max-height: 400px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        #slideshow img {
+            width: 100%;
+            display: none;
+        }
+        #slideshow img.active {
+            display: block;
+        }
+        .toggle-content {
+            margin: 20px 0;
+        }
+        .toggle-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .contact-form {
+            margin: 20px 0;
+        }
+        .contact-form input, .contact-form textarea {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .contact-form button {
+            padding: 10px 20px;
+            background-color: #28A745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .contact-form .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="slideshow">
+            <img src="image1.jpg" alt="Image 1" class="active">
+            <img src="image2.jpg" alt="Image 2">
+            <img src="image3.jpg" alt="Image 3">
+        </div>
+
+        <div class="toggle-content">
+            <button class="toggle-button" onclick="toggleContent()">Toggle Content</button>
+            <div id="content1">
+                <h2>Content 1</h2>
+                <p>This is the first section of content.</p>
+            </div>
+            <div id="content2" style="display: none;">
+                <h2>Content 2</h2>
+                <p>This is the second section of content.</p>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h2>Contact Us</h2>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="Your Name" required>
+                <input type="email" id="email" placeholder="Your Email" required>
+                <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit">Submit</button>
+                <div id="formErrors" class="error"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Slideshow functionality
+        let slideIndex = 0;
+        function showSlides() {
+            const slides = document.querySelectorAll('#slideshow img');
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === slideIndex) {
+                    slide.classList.add('active');
+                }
+            });
+            slideIndex = (slideIndex + 1) % slides.length;
+            setTimeout(showSlides, 3000); // Change image every 3 seconds
+        }
+        showSlides();
+
+        // Toggle content functionality
+        function toggleContent() {
+            const content1 = document.getElementById('content1');
+            const content2 = document.getElementById('content2');
+            if (content1.style.display === 'none') {
+                content1.style.display = 'block';
+                content2.style.display = 'none';
+            } else {
+                content1.style.display = 'none';
+                content2.style.display = 'block';
+            }
+        }
+
+        // Form validation functionality
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const errors = [];
+
+            if (!name) {
+                errors.push('Name is required.');
+            }
+            if (!email || !validateEmail(email)) {
+                errors.push('A valid email is required.');
+            }
+            if (!message) {
+                errors.push('Message is required.');
+            }
+
+            const errorDiv = document.getElementById('formErrors');
+            if (errors.length > 0) {
+                event.preventDefault();
+                errorDiv.innerHTML = errors.join('<br>');
+            } else {
+                errorDiv.innerHTML = '';
+            }
+        });
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+    </script>
+</body>
+</html>
